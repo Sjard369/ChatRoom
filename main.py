@@ -5,6 +5,7 @@ import os
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 class message(db.Model):
@@ -12,8 +13,7 @@ class message(db.Model):
     name = db.Column(db.String(150), nullable=False)
     message = db.Column(db.String(10000), nullable=False)
 
-@app.before_first_request
-def initialize_database():
+with app.app_context():
     db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
@@ -24,9 +24,9 @@ def home():
             neue_nachricht = message(name="User", message=nachricht)
             db.session.add(neue_nachricht)
             db.session.commit()
-    
+
     alle_nachrichten = message.query.order_by(message.id).all()
-    return render_template('index.html', nachrichten = alle_nachrichten)
+    return render_template('index.html', nachrichten=alle_nachrichten)
 
 @app.route('/clear')
 def clear():
