@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -24,6 +24,7 @@ def home():
             neue_nachricht = message(name="User", message=nachricht)
             db.session.add(neue_nachricht)
             db.session.commit()
+        return redirect(url_for('home'))  # <- Redirect nach POST
 
     alle_nachrichten = message.query.order_by(message.id).all()
     return render_template('index.html', nachrichten=alle_nachrichten)
