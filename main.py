@@ -24,7 +24,7 @@ def home():
             neue_nachricht = message(name="User", message=nachricht)
             db.session.add(neue_nachricht)
             db.session.commit()
-        return redirect(url_for('home'))  # <- Redirect nach POST
+        return redirect(url_for('/'))  # <- Redirect nach POST
 
     alle_nachrichten = message.query.order_by(message.id).all()
     return render_template('index.html', nachrichten=alle_nachrichten)
