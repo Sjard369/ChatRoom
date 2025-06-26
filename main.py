@@ -7,6 +7,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# ✅ Diese Zeile sorgt dafür, dass die Tabelle beim Deploy auf Render erstellt wird
+with app.app_context():
+    db.create_all()
+
 class message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
@@ -31,6 +35,4 @@ def clear():
     return 'Alle Nachrichten wurden gelöscht.'
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
